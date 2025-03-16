@@ -1,0 +1,31 @@
+<svg width="300" height="150" viewBox="0 0 300 150" xmlns="http://www.w3.org/2000/svg">
+  <g transform="translate(150,50)" stroke-width="4" fill="none" stroke-linecap="round">
+    <!-- 旋转风车线条 -->
+    <g transform="rotate(0)">
+      <path d="M 0,-40 Q 20,-10 10,20" stroke="#0047AB"/>
+      <path d="M 0,-40 Q -20,-10 -10,20" stroke="#56C2E6"/>
+    </g>
+    <g transform="rotate(60)">
+      <path d="M 0,-40 Q 20,-10 10,20" stroke="#0047AB"/>
+      <path d="M 0,-40 Q -20,-10 -10,20" stroke="#56C2E6"/>
+    </g>
+    <g transform="rotate(120)">
+      <path d="M 0,-40 Q 20,-10 10,20" stroke="#0047AB"/>
+      <path d="M 0,-40 Q -20,-10 -10,20" stroke="#56C2E6"/>
+    </g>
+    <g transform="rotate(180)">
+      <path d="M 0,-40 Q 20,-10 10,20" stroke="#0047AB"/>
+      <path d="M 0,-40 Q -20,-10 -10,20" stroke="#56C2E6"/>
+    </g>
+    <g transform="rotate(240)">
+      <path d="M 0,-40 Q 20,-10 10,20" stroke="#0047AB"/>
+      <path d="M 0,-40 Q -20,-10 -10,20" stroke="#56C2E6"/>
+    </g>
+    <g transform="rotate(300)">
+      <path d="M 0,-40 Q 20,-10 10,20" stroke="#0047AB"/>
+      <path d="M 0,-40 Q -20,-10 -10,20" stroke="#56C2E6"/>
+    </g>
+  </g>
+  <!-- 文字部分 -->
+  <text x="90" y="130" font-family="Times New Roman" font-size="30" fill="black">Instant <tspan font-weight="bold">AI</tspan></text>
+</svg>

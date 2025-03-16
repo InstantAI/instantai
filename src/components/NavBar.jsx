@@ -1,19 +1,16 @@
 // src/components/NavBar.jsx
-import React from 'react';
+import React, { useContext } from 'react';
 import { Layout, Button } from 'antd';
-import { useKeycloak } from '@react-keycloak/web';
+import { AuthContext } from '../AuthContext';
+import logo from '../assets/logo.svg';
 
 const { Header } = Layout;
 
 const NavBar = () => {
-    const { keycloak } = useKeycloak();
-    const username =
-        keycloak.tokenParsed && keycloak.tokenParsed.preferred_username
-            ? keycloak.tokenParsed.preferred_username
-            : '未知用户';
+    const { username, logout } = useContext(AuthContext);
 
     const handleLogout = () => {
-        keycloak.logout();
+        logout();
     };
 
     return (
@@ -27,11 +24,13 @@ const NavBar = () => {
                 boxShadow: '0 2px 8px #f0f1f2',
             }}
         >
-            <div className="logo" style={{ fontWeight: 'bold', fontSize: '18px' }}>
-                Logo
+            <div className="logo" style={{fontWeight: 'bold', fontSize: '18px'}}>
+                Instant AI
             </div>
             <div>
-                <span style={{ marginRight: '10px' }}>{username}</span>
+                <span style={{ marginRight: '10px' }}>
+                    {username || '未知用户'}
+                </span>
                 <Button onClick={handleLogout}>登出</Button>
             </div>
         </Header>

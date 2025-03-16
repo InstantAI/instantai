@@ -1,27 +1,40 @@
 // src/pages/NotebookListPage.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Layout, Menu, Table, Select, Button, message } from 'antd';
-import { getNotebooks } from '../services/notebooksService';
+import { getNotebooks, getWorkspaces, startNotebook, stopNotebook } from '../services/notebooksService';
 import NotebookCreateModal from './NotebookCreateModal';
-import NavBar from '../components/NavBar';
 import config from '../config/default.json';
-import { useKeycloak } from '@react-keycloak/web';
+import { AuthContext } from '../AuthContext'; // 确保路径正确
 
 const { Content, Sider } = Layout;
 const { Option } = Select;
 
 const NotebookListPage = () => {
-    const { keycloak } = useKeycloak();
-    const [namespace, setNamespace] = useState('default');
+    const { isAuthenticated } = useContext(AuthContext);
+
+    const [workspace, setWorkspace] = useState('');
+    const [workspaces, setWorkspaces] = useState([]);
     const [notebooks, setNotebooks] = useState([]);
     const [loading, setLoading] = useState(false);
     const [createModalVisible, setCreateModalVisible] = useState(false);
 
-    // 调用后端接口获取 notebooks 数据
-    const fetchNotebooks = async (ns) => {
+    const fetchWorkspaces = async () => {
+        try {
+            const data = await getWorkspaces();
+            setWorkspaces(data);
+            // If workspaces exist, set the first one as default
+            if (data && data.length > 0) {
+                setWorkspace(data[0].name);
+            }
+        } catch (error) {
+            message.error('获取工作空间失败');
+        }
+    };
+
+    const fetchNotebooks = async (ws) => {
         setLoading(true);
         try {
-            const data = await getNotebooks(ns, keycloak.token);
+            const data = await getNotebooks(ws);
             setNotebooks(data);
         } catch (error) {
             message.error(error.response?.data?.message || '获取数据失败');
@@ -30,17 +43,43 @@ const NotebookListPage = () => {
     };
 
     useEffect(() => {
-        if (keycloak.authenticated) {
-            fetchNotebooks(namespace);
+        if (isAuthenticated) {
+            fetchWorkspaces();
         }
-    }, [namespace, keycloak]);
+    }, [isAuthenticated]);
 
-    const handleNamespaceChange = (value) => {
-        setNamespace(value);
+    useEffect(() => {
+        if (workspaces.length > 0) {
+            fetchNotebooks(workspace);
+        }
+    }, [workspace, workspaces]);
+
+    const handleWorkspaceChange = (value) => {
+        setWorkspace(value);
     };
 
     const handleCreate = () => {
         setCreateModalVisible(true);
+    };
+
+    const handleStartNotebook = async (namespace, name) => {
+        try {
+            await startNotebook(namespace, name);
+            message.success('启动成功');
+            fetchNotebooks(workspace);
+        } catch (error) {
+            message.error('启动失败');
+        }
+    };
+
+    const handleStopNotebook = async (namespace, name) => {
+        try {
+            await stopNotebook(namespace, name);
+            message.success('关闭成功');
+            fetchNotebooks(workspace);
+        } catch (error) {
+            message.error('关闭失败');
+        }
     };
 
     // 根据返回数据计算状态
@@ -93,12 +132,21 @@ const NotebookListPage = () => {
                             <Button type="link" onClick={() => window.open(openLink, '_blank')}>
                                 打开
                             </Button>
-                            <Button type="link">关闭</Button>
+                            <Button type="link" onClick={() => handleStopNotebook(ns, notebookName)}>
+                                关闭
+                            </Button>
                         </>
                     );
                 }
                 if (status === 'stopped') {
-                    return <Button type="link">启动</Button>;
+                    return (
+                        <Button 
+                            type="link" 
+                            onClick={() => handleStartNotebook(ns, notebookName)}
+                        >
+                            启动
+                        </Button>
+                    );
                 }
                 return null;
             },
@@ -108,7 +156,6 @@ const NotebookListPage = () => {
     return (
         <Layout style={{ minHeight: '100vh' }}>
             {/* 顶部导航栏 */}
-            <NavBar />
             <Layout>
                 {/* 左侧菜单栏 */}
                 <Sider width={200} style={{ background: '#fff' }}>
@@ -131,14 +178,15 @@ const NotebookListPage = () => {
                         }}
                     >
                         <div style={{ marginBottom: 20, display: 'flex', alignItems: 'center' }}>
-                            <span style={{ marginRight: 10 }}>选择空间:</span>
+                            <span style={{ marginRight: 10 }}>选择工作空间:</span>
                             <Select
-                                defaultValue={namespace}
+                                value={workspace}
                                 style={{ width: 200 }}
-                                onChange={handleNamespaceChange}
+                                onChange={handleWorkspaceChange}
                             >
-                                <Option value="default">default</Option>
-                                <Option value="namespace2">namespace2</Option>
+                                {workspaces.map(ws => (
+                                    <Option key={ws.id} value={ws.name}>{ws.name}</Option>
+                                ))}
                             </Select>
                             <Button type="primary" style={{ marginLeft: 20 }} onClick={handleCreate}>
                                 创建
@@ -156,8 +204,8 @@ const NotebookListPage = () => {
             <NotebookCreateModal
                 visible={createModalVisible}
                 onClose={() => setCreateModalVisible(false)}
-                namespace={namespace}
-                onCreated={() => fetchNotebooks(namespace)}
+                workspace={workspace}
+                onCreated={() => fetchNotebooks(workspace)}
             />
         </Layout>
     );

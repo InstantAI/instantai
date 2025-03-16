@@ -2,10 +2,8 @@
 import React from 'react';
 import { Modal, Form, Input, Button, message } from 'antd';
 import { saveNotebook } from '../services/notebooksService';
-import { useKeycloak } from '@react-keycloak/web';
 
 const NotebookCreateModal = ({ visible, onClose, namespace, onCreated }) => {
-    const { keycloak } = useKeycloak();
     const [form] = Form.useForm();
 
     const onFinish = async (values) => {
@@ -33,7 +31,7 @@ const NotebookCreateModal = ({ visible, onClose, namespace, onCreated }) => {
         };
 
         try {
-            await saveNotebook(namespace, payload, keycloak.token);
+            await saveNotebook(namespace, payload);
             message.success('Notebook 创建成功');
             form.resetFields();
             onCreated && onCreated(); // 通知父组件刷新列表
