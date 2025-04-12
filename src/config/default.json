@@ -1,8 +1,0 @@
-{
-  "backend": "http://api.instant.ai",
-  "keycloak": {
-    "url": "http://keycloak.instant.ai/",
-    "realm": "master",
-    "clientId": "instantai-web"
-  }
-}

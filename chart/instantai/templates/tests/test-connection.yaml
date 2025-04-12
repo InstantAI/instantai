@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "instantai.fullname" . }}-test-connection"
+  labels:
+    {{- include "instantai.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "instantai.fullname" . }}:{{ .Values.service.port }}']
+  restartPolicy: Never
