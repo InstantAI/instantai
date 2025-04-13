@@ -62,7 +62,7 @@ export function DataTableRowActions({ row, status,onRefresh  }: DataTableRowActi
               className="h-8 px-3"
               asChild
             >
-              <a href={`${envVariables.VITE_BACKEND_URL}/notebooks/default/${row.original.metadata.name}`} target='_blank'>
+              <a href={`${envVariables.VITE_BACKEND_URL}/notebooks/${row.original.metadata.namespace}/${row.original.metadata.name}`} target='_blank'>
                 Open
               </a>
             </Button>

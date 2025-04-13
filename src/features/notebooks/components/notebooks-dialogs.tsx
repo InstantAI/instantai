@@ -3,14 +3,22 @@ import { NotebooksActionDialog } from './notebooks-action-dialog'
 import { NotebooksDeleteDialog } from './notebooks-delete-dialog'
 import { UsersInviteDialog } from './users-invite-dialog'
 
-export function NotebooksDialogs() {
+export function NotebooksDialogs({ opSuccess }: { 
+  opSuccess?: () => void 
+}) {
   const { open, setOpen, currentRow, setCurrentRow } = useNotebooks()
   return (
     <>
       <NotebooksActionDialog
         key='notebook-add'
         open={open === 'add'}
-        onOpenChange={() => setOpen('add')}
+        onOpenChange={() => {
+          setOpen('add')
+          setTimeout(() => {
+            setCurrentRow(null)
+            opSuccess?.()
+          }, 500)
+        }}
       />
 
       <UsersInviteDialog
@@ -40,6 +48,7 @@ export function NotebooksDialogs() {
               setOpen('delete')
               setTimeout(() => {
                 setCurrentRow(null)
+                opSuccess?.()
               }, 500)
             }}
             currentRow={currentRow}

@@ -66,8 +66,12 @@ export const getNotebooks = async (namespace: string): Promise<AxiosResponse<Not
     return APIInstance.get(`/api/notebooks/${namespace}`);
 };
 
-export const saveNotebook = async (namespace: string, notebookData: any) => {
+export const saveNotebook = async (namespace: string, notebookData: NotebookContainer) => {
     return APIInstance.post(`/api/notebooks/${namespace}`, notebookData);
+};
+
+export const deleteNotebook = async (namespace: string, name: string) => {
+    return APIInstance.delete(`/api/notebooks/${namespace}?name=${name}`);
 };
 
 export const startNotebook = async (namespace: string, name: string) => {

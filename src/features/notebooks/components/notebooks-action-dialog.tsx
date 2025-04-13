@@ -23,15 +23,30 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Notebook, saveNotebook } from '@/services/notebooksService'
+import { Notebook, NotebookContainer, saveNotebook } from '@/services/notebooksService'
 
+const parseK8sCpu = (cpuString?: string) => {
+  if (!cpuString) return undefined
+  if (cpuString.endsWith('m')) {
+    return parseFloat(cpuString) / 1000
+  }
+  return parseFloat(cpuString)
+}
+
+const parseK8sMemory = (memoryString?: string) => {
+  if (!memoryString) return undefined
+  return parseInt(memoryString.replace(/[^0-9]/g, ''))
+}
 const formSchema = z
   .object({
     name: z.string().min(1, { message: 'Name is required.' }),
     image: z.string().min(1, { message: 'Image Name is required.' }),
+    cpu: z.coerce.number().min(0.1, "至少0.1核"),
+    memory: z.coerce.number().min(64, "至少64Mi"),
     isEdit: z.boolean(),
   })
 type NotebookForm = z.infer<typeof formSchema>
+
 
 interface Props {
   currentRow?: Notebook
@@ -45,28 +60,53 @@ export function NotebooksActionDialog({ currentRow, open, onOpenChange }: Props)
     resolver: zodResolver(formSchema),
     defaultValues: isEdit
       ? {
-          ...currentRow,
-          isEdit,
-        }
+        ...currentRow,
+        cpu: parseK8sCpu(currentRow.spec.template.spec.containers[0]?.resources?.limits?.cpu),
+        memory: parseK8sMemory(currentRow.spec.template.spec.containers[0]?.resources?.limits?.memory),
+        isEdit,
+      }
       : {
-          name: '',
-          image: '',
-          isEdit,
-        },
+        name: '',
+        image: '',
+        cpu: 0.1,
+        memory: 64,
+        isEdit,
+      },
   })
 
   const onSubmit = async (values: NotebookForm) => {
-    form.reset()
-    await saveNotebook('default', values)
-    toast({
-      title: 'You submitted the following values:',
-      description: (
-        <pre className='mt-2 w-[340px] rounded-md bg-slate-950 p-4'>
-          <code className='text-white'>{JSON.stringify(values, null, 2)}</code>
-        </pre>
-      ),
-    })
-    onOpenChange(false)
+    try {
+      const namespace = currentRow?.metadata?.namespace || 'default'
+      const resources = {
+        limits: {
+          cpu: values.cpu ? `${values.cpu * 1000}m` : undefined,
+          memory: values.memory ? `${values.memory}Mi` : undefined
+        }
+      }
+      const containers: NotebookContainer = {
+        name: values.name,
+        image: values.image,
+        resources: {
+          limits: {
+            ...(resources.limits.cpu && { cpu: resources.limits.cpu }),
+            ...(resources.limits.memory && { memory: resources.limits.memory })
+          }
+        }
+      }
+      await saveNotebook(namespace, containers)
+      toast({
+        title: 'Notebook have saved.',
+        description: `Notebook ${values.name} have ${isEdit ? 'updated' : 'created'}`,
+      })
+      form.reset()
+      onOpenChange(false)
+    } catch (error) {
+      toast({
+        title: 'Save Notebook failed.',
+        description: error instanceof Error ? error.message : 'unknown error',
+        variant: 'destructive'
+      })
+    }
   }
 
   return (
@@ -123,6 +163,50 @@ export function NotebooksActionDialog({ currentRow, open, onOpenChange }: Props)
                       <Input
                         className='col-span-4'
                         autoComplete='off'
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className='col-span-4 col-start-3' />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="cpu"
+                render={({ field }) => (
+                  <FormItem className='grid grid-cols-6 items-center gap-x-4 gap-y-1 space-y-0'>
+                    <FormLabel className='col-span-1 text-right'>
+                      CPU (cores)
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min="0.1"
+                        step="0.1"
+                        className='col-span-4'
+                        placeholder="1"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className='col-span-4 col-start-3' />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="memory"
+                render={({ field }) => (
+                  <FormItem className='grid grid-cols-6 items-center gap-x-4 gap-y-1 space-y-0'>
+                    <FormLabel className='col-span-1 text-right'>
+                      Memory (Mi)
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min="64"
+                        step="64"
+                        className='col-span-4'
+                        placeholder="64"
                         {...field}
                       />
                     </FormControl>

@@ -89,7 +89,7 @@ export default function Notebooks() {
         </div>
       </Main>
 
-      <NotebooksDialogs />
+      <NotebooksDialogs opSuccess={() => setRefreshFlag(prev => !prev)} />
     </NotebooksProvider>
   )
 }

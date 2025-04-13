@@ -7,7 +7,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ConfirmDialog } from '@/components/confirm-dialog'
-import { Notebook } from '@/services/notebooksService'
+import { Notebook, deleteNotebook } from '@/services/notebooksService'
 
 interface Props {
   open: boolean
@@ -22,16 +22,20 @@ export function NotebooksDeleteDialog({ open, onOpenChange, currentRow }: Props)
     if (value.trim() !== currentRow.metadata.name) return
 
     onOpenChange(false)
-    toast({
-      title: 'The following user has been deleted:',
-      description: (
-        <pre className='mt-2 w-[340px] rounded-md bg-slate-950 p-4'>
-          <code className='text-white'>
-            {JSON.stringify(currentRow, null, 2)}
-          </code>
-        </pre>
-      ),
-    })
+    deleteNotebook(currentRow.metadata.namespace, currentRow.metadata.name)
+      .then(() => {
+        toast({
+          title: 'Notebook deleted',
+          description: `Notebook ${currentRow.metadata.name} has been deleted.`,
+        })
+      })
+      .catch((error) => {
+        toast({
+          title: 'Error deleting notebook',
+          description: error.message,
+          variant: 'destructive',
+        })
+      })
   }
 
   return (
