@@ -56,6 +56,14 @@ export default function Notebooks() {
     }
   }, [selectedWorkspace, refreshFlag]);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRefreshFlag(prev => !prev);
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <NotebooksProvider>
       <Header fixed>

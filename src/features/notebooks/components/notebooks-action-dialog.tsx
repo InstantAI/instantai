@@ -47,6 +47,27 @@ const formSchema = z
   })
 type NotebookForm = z.infer<typeof formSchema>
 
+function buildDefaultValues(currentRow?: Notebook): NotebookForm {
+  if (!currentRow) {
+    return {
+      name: '',
+      image: '',
+      cpu: 0.1,
+      memory: 64,
+      isEdit: false,
+    }
+  }
+
+  const container = currentRow.spec.template.spec.containers?.[0]
+
+  return {
+    name: currentRow.metadata.name,
+    image: container?.image ?? '',
+    cpu: parseK8sCpu(container?.resources?.limits?.cpu) ?? 0.1,
+    memory: parseK8sMemory(container?.resources?.limits?.memory) ?? 64,
+    isEdit: true,
+  }
+}
 
 interface Props {
   currentRow?: Notebook
@@ -58,20 +79,7 @@ export function NotebooksActionDialog({ currentRow, open, onOpenChange }: Props)
   const isEdit = !!currentRow
   const form = useForm<NotebookForm>({
     resolver: zodResolver(formSchema),
-    defaultValues: isEdit
-      ? {
-        ...currentRow,
-        cpu: parseK8sCpu(currentRow.spec.template.spec.containers[0]?.resources?.limits?.cpu),
-        memory: parseK8sMemory(currentRow.spec.template.spec.containers[0]?.resources?.limits?.memory),
-        isEdit,
-      }
-      : {
-        name: '',
-        image: '',
-        cpu: 0.1,
-        memory: 64,
-        isEdit,
-      },
+    defaultValues: buildDefaultValues(currentRow),
   })
 
   const onSubmit = async (values: NotebookForm) => {
@@ -142,8 +150,9 @@ export function NotebooksActionDialog({ currentRow, open, onOpenChange }: Props)
                     </FormLabel>
                     <FormControl>
                       <Input
-                        className='col-span-4'
+                        className={`col-span-4 ${isEdit ? 'opacity-60 cursor-not-allowed' : ''}`}
                         autoComplete='off'
+                        readOnly={isEdit}
                         {...field}
                       />
                     </FormControl>
