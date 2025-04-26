@@ -9,8 +9,8 @@ import { NotebooksPrimaryButtons } from './components/notebooks-primary-buttons'
 import { NotebooksTable } from './components/notebooks-table'
 import NotebooksProvider from './context/notebooks-context'
 import { useEffect, useState } from 'react'
-import { getNotebooks, getWorkspaces } from '@/services/notebooksService';
-import { Notebook,Workspace } from '@/services/notebooksService'
+import { getNotebooks, Notebook } from '@/services/notebooksService';
+import { getWorkspaces,Workspace } from '@/services/workspacesService'
 
 
 export default function Notebooks() {

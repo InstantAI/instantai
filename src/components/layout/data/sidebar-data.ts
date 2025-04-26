@@ -7,9 +7,9 @@ import {
   IconPackages,
   IconPalette,
   IconSettings,
+  IconSpaces,
   IconTool,
   IconUserCog,
-  IconUsers,
 } from '@tabler/icons-react'
 import { type SidebarData } from '../types'
 
@@ -39,9 +39,9 @@ export const sidebarData: SidebarData = {
           icon: IconPackages,
         },
         {
-          title: 'Users',
-          url: '/users',
-          icon: IconUsers,
+          title: 'Workspaces',
+          url: '/workspaces',
+          icon: IconSpaces,
         },
       ],
     },

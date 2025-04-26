@@ -51,17 +51,6 @@ export interface Notebook {
     status: NotebookStatus;
 }
 
-export interface Workspace {
-    name: string;
-    cpuLimit: string;
-    memoryLimit: string;
-    gpuLimit: string;
-}
-
-export const getWorkspaces = async () => {
-    return APIInstance.get('/api/workspaces');
-};
-
 export const getNotebooks = async (namespace: string): Promise<AxiosResponse<Notebook[]>> => {
     return APIInstance.get(`/api/notebooks/${namespace}`);
 };

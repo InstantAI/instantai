@@ -26,8 +26,8 @@ const errors401LazyImport = createFileRoute('/(errors)/401')()
 const AuthenticatedSettingsRouteLazyImport = createFileRoute(
   '/_authenticated/settings',
 )()
-const AuthenticatedUsersIndexLazyImport = createFileRoute(
-  '/_authenticated/users/',
+const AuthenticatedWorkspacesIndexLazyImport = createFileRoute(
+  '/_authenticated/workspaces/',
 )()
 const AuthenticatedTasksIndexLazyImport = createFileRoute(
   '/_authenticated/tasks/',
@@ -116,13 +116,15 @@ const AuthenticatedSettingsRouteLazyRoute =
     import('./routes/_authenticated/settings/route.lazy').then((d) => d.Route),
   )
 
-const AuthenticatedUsersIndexLazyRoute =
-  AuthenticatedUsersIndexLazyImport.update({
-    id: '/users/',
-    path: '/users/',
+const AuthenticatedWorkspacesIndexLazyRoute =
+  AuthenticatedWorkspacesIndexLazyImport.update({
+    id: '/workspaces/',
+    path: '/workspaces/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any).lazy(() =>
-    import('./routes/_authenticated/users/index.lazy').then((d) => d.Route),
+    import('./routes/_authenticated/workspaces/index.lazy').then(
+      (d) => d.Route,
+    ),
   )
 
 const AuthenticatedTasksIndexLazyRoute =
@@ -323,11 +325,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTasksIndexLazyImport
       parentRoute: typeof AuthenticatedRouteImport
     }
-    '/_authenticated/users/': {
-      id: '/_authenticated/users/'
-      path: '/users'
-      fullPath: '/users'
-      preLoaderRoute: typeof AuthenticatedUsersIndexLazyImport
+    '/_authenticated/workspaces/': {
+      id: '/_authenticated/workspaces/'
+      path: '/workspaces'
+      fullPath: '/workspaces'
+      preLoaderRoute: typeof AuthenticatedWorkspacesIndexLazyImport
       parentRoute: typeof AuthenticatedRouteImport
     }
   }
@@ -367,7 +369,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedHelpCenterIndexLazyRoute: typeof AuthenticatedHelpCenterIndexLazyRoute
   AuthenticatedNotebooksIndexLazyRoute: typeof AuthenticatedNotebooksIndexLazyRoute
   AuthenticatedTasksIndexLazyRoute: typeof AuthenticatedTasksIndexLazyRoute
-  AuthenticatedUsersIndexLazyRoute: typeof AuthenticatedUsersIndexLazyRoute
+  AuthenticatedWorkspacesIndexLazyRoute: typeof AuthenticatedWorkspacesIndexLazyRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -377,7 +379,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedHelpCenterIndexLazyRoute: AuthenticatedHelpCenterIndexLazyRoute,
   AuthenticatedNotebooksIndexLazyRoute: AuthenticatedNotebooksIndexLazyRoute,
   AuthenticatedTasksIndexLazyRoute: AuthenticatedTasksIndexLazyRoute,
-  AuthenticatedUsersIndexLazyRoute: AuthenticatedUsersIndexLazyRoute,
+  AuthenticatedWorkspacesIndexLazyRoute: AuthenticatedWorkspacesIndexLazyRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -400,7 +402,7 @@ export interface FileRoutesByFullPath {
   '/notebooks': typeof AuthenticatedNotebooksIndexLazyRoute
   '/settings/': typeof AuthenticatedSettingsIndexLazyRoute
   '/tasks': typeof AuthenticatedTasksIndexLazyRoute
-  '/users': typeof AuthenticatedUsersIndexLazyRoute
+  '/workspaces': typeof AuthenticatedWorkspacesIndexLazyRoute
 }
 
 export interface FileRoutesByTo {
@@ -418,7 +420,7 @@ export interface FileRoutesByTo {
   '/notebooks': typeof AuthenticatedNotebooksIndexLazyRoute
   '/settings': typeof AuthenticatedSettingsIndexLazyRoute
   '/tasks': typeof AuthenticatedTasksIndexLazyRoute
-  '/users': typeof AuthenticatedUsersIndexLazyRoute
+  '/workspaces': typeof AuthenticatedWorkspacesIndexLazyRoute
 }
 
 export interface FileRoutesById {
@@ -439,7 +441,7 @@ export interface FileRoutesById {
   '/_authenticated/notebooks/': typeof AuthenticatedNotebooksIndexLazyRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexLazyRoute
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexLazyRoute
-  '/_authenticated/users/': typeof AuthenticatedUsersIndexLazyRoute
+  '/_authenticated/workspaces/': typeof AuthenticatedWorkspacesIndexLazyRoute
 }
 
 export interface FileRouteTypes {
@@ -461,7 +463,7 @@ export interface FileRouteTypes {
     | '/notebooks'
     | '/settings/'
     | '/tasks'
-    | '/users'
+    | '/workspaces'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/401'
@@ -478,7 +480,7 @@ export interface FileRouteTypes {
     | '/notebooks'
     | '/settings'
     | '/tasks'
-    | '/users'
+    | '/workspaces'
   id:
     | '__root__'
     | '/_authenticated'
@@ -497,7 +499,7 @@ export interface FileRouteTypes {
     | '/_authenticated/notebooks/'
     | '/_authenticated/settings/'
     | '/_authenticated/tasks/'
-    | '/_authenticated/users/'
+    | '/_authenticated/workspaces/'
   fileRoutesById: FileRoutesById
 }
 
@@ -545,7 +547,7 @@ export const routeTree = rootRoute
         "/_authenticated/help-center/",
         "/_authenticated/notebooks/",
         "/_authenticated/tasks/",
-        "/_authenticated/users/"
+        "/_authenticated/workspaces/"
       ]
     },
     "/_authenticated/settings": {
@@ -610,8 +612,8 @@ export const routeTree = rootRoute
       "filePath": "_authenticated/tasks/index.lazy.tsx",
       "parent": "/_authenticated"
     },
-    "/_authenticated/users/": {
-      "filePath": "_authenticated/users/index.lazy.tsx",
+    "/_authenticated/workspaces/": {
+      "filePath": "_authenticated/workspaces/index.lazy.tsx",
       "parent": "/_authenticated"
     }
   }

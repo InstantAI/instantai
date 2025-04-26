@@ -1,14 +1,15 @@
-import { useUsers } from '../context/users-context'
-import { UsersActionDialog } from './users-action-dialog'
-import { UsersDeleteDialog } from './users-delete-dialog'
+import { useWorkspaces } from '../context/workspaces-context'
+import { WorkspacesActionDialog } from './workspaces-action-dialog'
+import { WorkspacesDeleteDialog } from './workspaces-delete-dialog'
 import { UsersInviteDialog } from './users-invite-dialog'
 
-export function UsersDialogs() {
-  const { open, setOpen, currentRow, setCurrentRow } = useUsers()
+export function WorkspacesDialogs() {
+  const { refresh, open, setOpen, currentRow, setCurrentRow } = useWorkspaces()
   return (
     <>
-      <UsersActionDialog
-        key='user-add'
+      <WorkspacesActionDialog
+        key='workspace-add'
+        refresh={refresh}
         open={open === 'add'}
         onOpenChange={() => setOpen('add')}
       />
@@ -21,8 +22,9 @@ export function UsersDialogs() {
 
       {currentRow && (
         <>
-          <UsersActionDialog
-            key={`user-edit-${currentRow.id}`}
+          <WorkspacesActionDialog
+            key={`workspace-edit-${currentRow.name}`}
+            refresh={refresh}
             open={open === 'edit'}
             onOpenChange={() => {
               setOpen('edit')
@@ -33,8 +35,9 @@ export function UsersDialogs() {
             currentRow={currentRow}
           />
 
-          <UsersDeleteDialog
-            key={`user-delete-${currentRow.id}`}
+          <WorkspacesDeleteDialog
+            key={`workspace-delete-${currentRow.name}`}
+            refresh={refresh}
             open={open === 'delete'}
             onOpenChange={() => {
               setOpen('delete')

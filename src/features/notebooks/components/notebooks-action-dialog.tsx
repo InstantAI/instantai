@@ -136,7 +136,7 @@ export function NotebooksActionDialog({ currentRow, open, onOpenChange }: Props)
         <ScrollArea className='-mr-4 h-[26.25rem] w-full py-1 pr-4'>
           <Form {...form}>
             <form
-              id='user-form'
+              id='notebook-form'
               onSubmit={form.handleSubmit(onSubmit)}
               className='space-y-4 p-0.5'
             >
@@ -227,7 +227,7 @@ export function NotebooksActionDialog({ currentRow, open, onOpenChange }: Props)
           </Form>
         </ScrollArea>
         <DialogFooter>
-          <Button type='submit' form='user-form'>
+          <Button type='submit' form='notebook-form'>
             Save changes
           </Button>
         </DialogFooter>
