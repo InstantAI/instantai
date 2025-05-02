@@ -6,8 +6,13 @@ export interface Workspace {
     gpuLimit: number;
 }
 
-export const getWorkspaces = async () => {
-    return APIInstance.get('/api/workspaces');
+// export const getWorkspaces = async () => {
+//     return APIInstance.get('/api/workspaces');
+// };
+
+export const getWorkspaces = async (): Promise<Workspace[]> => {
+    const response = await APIInstance.get('/api/workspaces');
+    return response.data;
 };
 
 export const saveWorkspace = async (workspaceData: Workspace) => {

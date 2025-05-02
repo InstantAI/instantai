@@ -15,7 +15,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Notebook,Workspace } from '@/services/notebooksService'
+import { Notebook } from '@/services/notebooksService'
+import { Workspace } from '@/services/workspacesService'
 import { DataTableToolbar } from './data-table-toolbar'
 
 declare module '@tanstack/react-table' {

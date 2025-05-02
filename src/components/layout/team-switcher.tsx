@@ -14,7 +14,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar'
-import { Workspace } from '@/services/notebooksService';
+import { Workspace } from '@/services/workspacesService';
 
 export function TeamSwitcher({
   teams,

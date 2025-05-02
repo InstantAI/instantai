@@ -20,20 +20,12 @@ export default function Notebooks() {
   const [refreshFlag, setRefreshFlag] = useState(false);
   
   useEffect(() => {
-    const fetchWorkspaces = async () => {
-      try {
-        const response = await getWorkspaces();
-        setWorkspaces(response.data);
-        if (response.data.length > 0) {
-          setSelectedWorkspace(response.data[0].name);
-        }
-      } catch (error) {
-        console.error('获取工作区失败', error);
+    getWorkspaces().then((data) => {
+      setWorkspaces(data);
+      if (data.length > 0) {
+        setSelectedWorkspace(data[0].name);
       }
-    };
-    if (!workspaces.length) {
-      fetchWorkspaces();
-    }
+    });
   }, [workspaces.length]);
 
   const fetchNotebooks = async () => {

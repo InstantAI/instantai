@@ -1,5 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Workspace } from '@/services/notebooksService'
+import { Workspace } from '@/services/workspacesService'
 
 interface DataTableToolbarProps {
   workspaces: Workspace[]

@@ -7,9 +7,7 @@ import { columns } from './components/workspaces-columns'
 import { WorkspacesDialogs } from './components/workspaces-dialogs'
 import { WorkspacesPrimaryButtons } from './components/workspaces-primary-buttons'
 import { WorkspacesTable } from './components/workspaces-table'
-import WorkspacesProvider, { useWorkspaces } from './context/workspaces-context'
-import { useEffect, useState } from 'react'
-import {  Workspace,getWorkspaces } from '@/services/workspacesService';
+import WorkspacesProvider from './context/workspaces-context'
 
 export default function Workspaces() {
   // const [workspaces, setWorkspaces] = useState<Workspace[]>([]);

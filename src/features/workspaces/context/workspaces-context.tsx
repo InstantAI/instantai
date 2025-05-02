@@ -24,22 +24,11 @@ export default function WorkspacesProvider({ children }: Props) {
   const [currentRow, setCurrentRow] = useState<Workspace | null>(null)
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   useEffect(() => {
-    const fetchWorkspaces = async () => {
-      try {
-        const response = await getWorkspaces();
-        setWorkspaces(response.data);
-      } catch (error) {
-        console.error('failed to get workspaces', error);
-      }
-    };
-    if (!workspaces.length) {
-      fetchWorkspaces();
-    }
+    getWorkspaces().then(setWorkspaces);
   }, [workspaces.length]);
   
   const refresh = async () => {
-    const response = await getWorkspaces();
-    setWorkspaces(response.data);
+    getWorkspaces().then(setWorkspaces);
   };
   
   return (
