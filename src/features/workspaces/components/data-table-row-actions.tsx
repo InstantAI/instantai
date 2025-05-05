@@ -1,6 +1,6 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { Row } from '@tanstack/react-table'
-import { IconEdit, IconTrash } from '@tabler/icons-react'
+import { IconEdit, IconTrash, IconUser } from '@tabler/icons-react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { useWorkspaces } from '../context/workspaces-context'
 import { Workspace } from '@/services/workspacesService'
+import { useNavigate } from '@tanstack/react-router'
 
 interface DataTableRowActionsProps {
   row: Row<Workspace>
@@ -19,6 +20,7 @@ interface DataTableRowActionsProps {
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const { setOpen, setCurrentRow } = useWorkspaces()
+  const navigate = useNavigate()
   return (
     <>
       <DropdownMenu modal={false}>
@@ -32,6 +34,18 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end' className='w-[160px]'>
+          <DropdownMenuItem
+            onClick={() => navigate({
+              to: '/workspaces/$workspaceName/members',
+              params: { workspaceName: row.original.name }
+            })}
+          >
+            Members
+            <DropdownMenuShortcut>
+              <IconUser size={16} />
+            </DropdownMenuShortcut>
+          </DropdownMenuItem>
+
           <DropdownMenuItem
             onClick={() => {
               setCurrentRow(row.original)

@@ -10,20 +10,6 @@ import { WorkspacesTable } from './components/workspaces-table'
 import WorkspacesProvider from './context/workspaces-context'
 
 export default function Workspaces() {
-  // const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
-  // useEffect(() => {
-  //   const fetchWorkspaces = async () => {
-  //     try {
-  //       const response = await getWorkspaces();
-  //       setWorkspaces(response.data);
-  //     } catch (error) {
-  //       console.error('获取工作区失败', error);
-  //     }
-  //   };
-  //   if (!workspaces.length) {
-  //     fetchWorkspaces();
-  //   }
-  // }, [workspaces.length]);
 
   return (
     <WorkspacesProvider>
@@ -46,7 +32,9 @@ export default function Workspaces() {
           <WorkspacesPrimaryButtons />
         </div>
         <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0'>
-          <WorkspacesTable columns={columns} />
+          <WorkspacesTable 
+            columns={columns} 
+          />
         </div>
       </Main>
 

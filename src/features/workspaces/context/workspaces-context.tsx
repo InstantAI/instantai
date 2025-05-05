@@ -23,9 +23,10 @@ export default function WorkspacesProvider({ children }: Props) {
   const [open, setOpen] = useDialogState<WorkspacesDialogType>(null)
   const [currentRow, setCurrentRow] = useState<Workspace | null>(null)
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
+
   useEffect(() => {
     getWorkspaces().then(setWorkspaces);
-  }, [workspaces.length]);
+  }, []);
   
   const refresh = async () => {
     getWorkspaces().then(setWorkspaces);

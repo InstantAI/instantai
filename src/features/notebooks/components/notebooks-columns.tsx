@@ -29,7 +29,8 @@ const computeStatus = (record: Notebook) => {
 };
 
 export const getColumns = (
-  onRefresh: () => void
+  onRefresh: () => void,
+  canEdit: boolean = false
 ): ColumnDef<Notebook>[] => [
     {
       accessorKey: 'name',
@@ -75,7 +76,7 @@ export const getColumns = (
       ),
       cell: ({ row }) => {
         const status = computeStatus(row.original)
-        return <DataTableRowActions row={row} status={status} onRefresh={onRefresh} />
+        return <DataTableRowActions row={row} status={status} onRefresh={onRefresh} canEdit={canEdit} />
       },
     },
   ]

@@ -3,8 +3,9 @@ import { NotebooksActionDialog } from './notebooks-action-dialog'
 import { NotebooksDeleteDialog } from './notebooks-delete-dialog'
 import { UsersInviteDialog } from './users-invite-dialog'
 
-export function NotebooksDialogs({ opSuccess }: { 
-  opSuccess?: () => void 
+export function NotebooksDialogs({ opSuccess, selectedWorkspace }: {
+  opSuccess?: () => void,
+  selectedWorkspace?: string,
 }) {
   const { open, setOpen, currentRow, setCurrentRow } = useNotebooks()
   return (
@@ -25,6 +26,7 @@ export function NotebooksDialogs({ opSuccess }: {
         key='user-invite'
         open={open === 'invite'}
         onOpenChange={() => setOpen('invite')}
+        selectedWorkspace={selectedWorkspace}
       />
 
       {currentRow && (

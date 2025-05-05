@@ -8,9 +8,9 @@ import { NotebooksDialogs } from './components/notebooks-dialogs'
 import { NotebooksPrimaryButtons } from './components/notebooks-primary-buttons'
 import { NotebooksTable } from './components/notebooks-table'
 import NotebooksProvider from './context/notebooks-context'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { getNotebooks, Notebook } from '@/services/notebooksService';
-import { getWorkspaces,Workspace } from '@/services/workspacesService'
+import { getWorkspaces, Workspace, WorkspaceRole } from '@/services/workspacesService'
 
 
 export default function Notebooks() {
@@ -18,15 +18,24 @@ export default function Notebooks() {
   const [selectedWorkspace, setSelectedWorkspace] = useState('');
   const [notebooks, setNotebooks] = useState<Notebook[]>([]);
   const [refreshFlag, setRefreshFlag] = useState(false);
-  
+
+  // Check if current selected workspace has edit/admin role
+  const canEdit = useMemo(() => {
+    const workspace = workspaces.find(ws => ws.name === selectedWorkspace);
+    return workspace &&
+      (workspace.role === WorkspaceRole.EDIT || workspace.role === WorkspaceRole.ADMIN);
+  }, [selectedWorkspace, workspaces]);
+
+
   useEffect(() => {
     getWorkspaces().then((data) => {
       setWorkspaces(data);
       if (data.length > 0) {
         setSelectedWorkspace(data[0].name);
       }
-    });
-  }, [workspaces.length]);
+    })
+  }, []);
+
 
   const fetchNotebooks = async () => {
     try {
@@ -74,13 +83,16 @@ export default function Notebooks() {
               Manage your notebooks.
             </p>
           </div>
-          <NotebooksPrimaryButtons />
+          {canEdit && (
+            <NotebooksPrimaryButtons />
+          )}
         </div>
         <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0'>
           <NotebooksTable
             data={notebooks}
             columns={getColumns( // ✅ 动态生成columns
-              () => setRefreshFlag(prev => !prev) // 刷新回调
+              () => setRefreshFlag(prev => !prev),
+              canEdit
             )}
             workspaces={workspaces}
             selectedWorkspace={selectedWorkspace}
@@ -89,7 +101,12 @@ export default function Notebooks() {
         </div>
       </Main>
 
-      <NotebooksDialogs opSuccess={() => setRefreshFlag(prev => !prev)} />
+      {canEdit && (
+        <NotebooksDialogs
+          opSuccess={() => setRefreshFlag(prev => !prev)}
+          selectedWorkspace={selectedWorkspace}
+        />
+      )}
     </NotebooksProvider>
   )
 }

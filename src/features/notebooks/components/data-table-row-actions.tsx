@@ -15,15 +15,16 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useNotebooks } from '../context/notebooks-context'
-import { Notebook,startNotebook,stopNotebook } from '@/services/notebooksService'
+import { Notebook, startNotebook, stopNotebook } from '@/services/notebooksService'
 
 interface DataTableRowActionsProps {
   row: Row<Notebook>
   status: string
   onRefresh: () => void
+  canEdit: boolean
 }
 
-export function DataTableRowActions({ row, status,onRefresh  }: DataTableRowActionsProps) {
+export function DataTableRowActions({ row, status, onRefresh, canEdit }: DataTableRowActionsProps) {
   const { setOpen, setCurrentRow } = useNotebooks()
   const handleStart = async () => {
     try {
@@ -67,17 +68,18 @@ export function DataTableRowActions({ row, status,onRefresh  }: DataTableRowActi
               </a>
             </Button>
           </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-8 px-3 text-orange-600 hover:text-orange-700"
-            onClick={handleStop}
-          >
-            Stop
-          </Button>
+          {canEdit && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 px-3 text-orange-600 hover:text-orange-700"
+              onClick={handleStop}
+            >
+              Stop
+            </Button>)}
         </>
       )}
-      {status === 'stopped' && (
+      {status === 'stopped' && canEdit && (
         <Button
           variant="ghost"
           size="sm"
@@ -97,32 +99,33 @@ export function DataTableRowActions({ row, status,onRefresh  }: DataTableRowActi
             <span className='sr-only'>Open menu</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align='end' className='w-[160px]'>
-          <DropdownMenuItem
-            onClick={() => {
-              setCurrentRow(row.original)
-              setOpen('edit')
-            }}
-          >
-            Edit
-            <DropdownMenuShortcut>
-              <IconEdit size={16} />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => {
-              setCurrentRow(row.original)
-              setOpen('delete')
-            }}
-            className='!text-red-500'
-          >
-            Delete
-            <DropdownMenuShortcut>
-              <IconTrash size={16} />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
+        {canEdit && (
+          <DropdownMenuContent align='end' className='w-[160px]'>
+            <DropdownMenuItem
+              onClick={() => {
+                setCurrentRow(row.original)
+                setOpen('edit')
+              }}
+            >
+              Edit
+              <DropdownMenuShortcut>
+                <IconEdit size={16} />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() => {
+                setCurrentRow(row.original)
+                setOpen('delete')
+              }}
+              className='!text-red-500'
+            >
+              Delete
+              <DropdownMenuShortcut>
+                <IconTrash size={16} />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
+          </DropdownMenuContent>)}
       </DropdownMenu>
     </div>
   )

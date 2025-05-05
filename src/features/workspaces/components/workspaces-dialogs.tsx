@@ -5,6 +5,7 @@ import { UsersInviteDialog } from './users-invite-dialog'
 
 export function WorkspacesDialogs() {
   const { refresh, open, setOpen, currentRow, setCurrentRow } = useWorkspaces()
+
   return (
     <>
       <WorkspacesActionDialog
@@ -22,6 +23,7 @@ export function WorkspacesDialogs() {
 
       {currentRow && (
         <>
+
           <WorkspacesActionDialog
             key={`workspace-edit-${currentRow.name}`}
             refresh={refresh}

@@ -22,17 +22,12 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
 import { SelectDropdown } from '@/components/select-dropdown'
 import { userTypes } from '../data/data'
 
 const formSchema = z.object({
-  email: z
-    .string()
-    .min(1, { message: 'Email is required.' })
-    .email({ message: 'Email is invalid.' }),
+  username: z.string().min(1, { message: 'Username is required.' }),
   role: z.string().min(1, { message: 'Role is required.' }),
-  desc: z.string().optional(),
 })
 type UserInviteForm = z.infer<typeof formSchema>
 
@@ -44,7 +39,7 @@ interface Props {
 export function UsersInviteDialog({ open, onOpenChange }: Props) {
   const form = useForm<UserInviteForm>({
     resolver: zodResolver(formSchema),
-    defaultValues: { email: '', role: '', desc: '' },
+    defaultValues: { username: '', role: '' },
   })
 
   const onSubmit = (values: UserInviteForm) => {
@@ -74,8 +69,7 @@ export function UsersInviteDialog({ open, onOpenChange }: Props) {
             <IconMailPlus /> Invite User
           </DialogTitle>
           <DialogDescription>
-            Invite new user to join your team by sending them an email
-            invitation. Assign a role to define their access level.
+            Invite new user to join your workspace. Assign a role to define their access level.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -86,14 +80,13 @@ export function UsersInviteDialog({ open, onOpenChange }: Props) {
           >
             <FormField
               control={form.control}
-              name='email'
+              name='username'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input
-                      type='email'
-                      placeholder='eg: john.doe@gmail.com'
+                      placeholder='eg: username'
                       {...field}
                     />
                   </FormControl>
@@ -116,23 +109,6 @@ export function UsersInviteDialog({ open, onOpenChange }: Props) {
                       value,
                     }))}
                   />
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='desc'
-              render={({ field }) => (
-                <FormItem className=''>
-                  <FormLabel>Description (optional)</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      className='resize-none'
-                      placeholder='Add a personal note to your invitation (optional)'
-                      {...field}
-                    />
-                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
