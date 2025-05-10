@@ -3,7 +3,6 @@ import {
   ColumnDef,
   ColumnFiltersState,
   RowData,
-  VisibilityState,
   flexRender,
   getCoreRowModel,
   getFacetedRowModel,
@@ -35,21 +34,18 @@ interface DataTableProps {
 export function WorkspacesTable({ columns }: DataTableProps) {
   const { workspaces } = useWorkspaces();
   const [rowSelection, setRowSelection] = useState({})
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 
   const table = useReactTable({
     data: workspaces,
     columns,
     state: {
-      columnVisibility,
       rowSelection,
       columnFilters,
     },
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),

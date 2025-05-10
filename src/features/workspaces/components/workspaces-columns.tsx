@@ -1,6 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { DataTableColumnHeader } from './data-table-column-header'
-import { Workspace } from '@/services/workspacesService'
+import { Workspace, WorkspaceRole } from '@/services/workspacesService'
 import { DataTableRowActions } from './data-table-row-actions'
 
 export const columns: ColumnDef<Workspace>[] = [
@@ -38,6 +38,12 @@ export const columns: ColumnDef<Workspace>[] = [
   },
   {
     id: 'actions',
-    cell: DataTableRowActions,
+    cell: ({ row }) => {
+      const role = row.original.role;
+      if (role === WorkspaceRole.ADMIN || role === WorkspaceRole.EDIT) {
+        return <DataTableRowActions row={row} />;
+      }
+      return null;
+    },
   },
 ]

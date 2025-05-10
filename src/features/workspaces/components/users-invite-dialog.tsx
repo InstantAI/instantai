@@ -24,6 +24,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { SelectDropdown } from '@/components/select-dropdown'
 import { userTypes } from '../data/data'
+import { addUserToWorkspace, WorkspaceRole } from '@/services/workspacesService'
 
 const formSchema = z.object({
   username: z.string().min(1, { message: 'Username is required.' }),
@@ -34,24 +35,29 @@ type UserInviteForm = z.infer<typeof formSchema>
 interface Props {
   open: boolean
   onOpenChange: (open: boolean) => void
+  selectedWorkspace?: string
+  onSuccess?: () => void
 }
 
-export function UsersInviteDialog({ open, onOpenChange }: Props) {
+export function UsersInviteDialog({ open, onOpenChange, selectedWorkspace, onSuccess }: Props) {
   const form = useForm<UserInviteForm>({
     resolver: zodResolver(formSchema),
     defaultValues: { username: '', role: '' },
   })
 
-  const onSubmit = (values: UserInviteForm) => {
+  const onSubmit = async (values: UserInviteForm) => {
+    if (!selectedWorkspace) return;
+    
     form.reset()
+    await addUserToWorkspace(selectedWorkspace, {
+      username: values.username,
+      role: values.role as WorkspaceRole,
+    });
     toast({
-      title: 'You submitted the following values:',
-      description: (
-        <pre className='mt-2 w-[340px] rounded-md bg-slate-950 p-4'>
-          <code className='text-white'>{JSON.stringify(values, null, 2)}</code>
-        </pre>
-      ),
+      title: 'User invite',
+      description: `User ${values.username} invited successfully.`,
     })
+    onSuccess?.()
     onOpenChange(false)
   }
 

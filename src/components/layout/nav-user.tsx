@@ -3,7 +3,6 @@ import {
   BadgeCheck,
   Bell,
   ChevronsUpDown,
-  CreditCard,
   LogOut,
   Sparkles,
 } from 'lucide-react'
@@ -88,12 +87,7 @@ export function NavUser({
                   Account
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to='/settings'>
-                  <CreditCard />
-                  Billing
-                </Link>
-              </DropdownMenuItem>
+    
               <DropdownMenuItem asChild>
                 <Link to='/settings/notifications'>
                   <Bell />

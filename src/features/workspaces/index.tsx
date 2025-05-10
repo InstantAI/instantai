@@ -8,6 +8,7 @@ import { WorkspacesDialogs } from './components/workspaces-dialogs'
 import { WorkspacesPrimaryButtons } from './components/workspaces-primary-buttons'
 import { WorkspacesTable } from './components/workspaces-table'
 import WorkspacesProvider from './context/workspaces-context'
+import UserService from '@/app/keycloak'
 
 export default function Workspaces() {
 
@@ -29,7 +30,7 @@ export default function Workspaces() {
               Manage your workspaces and their roles here.
             </p>
           </div>
-          <WorkspacesPrimaryButtons />
+          {UserService.isAdmin() && <WorkspacesPrimaryButtons />}
         </div>
         <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0'>
           <WorkspacesTable 

@@ -36,10 +36,6 @@ export const getWorkspaces = async (): Promise<Workspace[]> => {
 export const getWorspaceMembers = async (workspaceName: string): Promise<WorkspacePermission[]> => {
     const response = await APIInstance.get(`/api/workspaces/${workspaceName}/permissions`);
     return response.data;
-    // const workspacePermissions: WorkspacePermission[] = response.data;
-    // return workspacePermissions.map((workspacePermission: WorkspacePermission) => ({
-    //     ...workspacePermission
-    // }));
 };
 
 export const saveWorkspace = async (workspaceData: Omit<Workspace, 'role'>) => {
@@ -52,4 +48,9 @@ export const deleteWorkspace = async (workspaceName: string) => {
 
 export const addUserToWorkspace = async (workspaceName: string, permission: WorkspacePermission) => {
     return APIInstance.post(`/api/workspaces/${workspaceName}/permissions`, permission);
+}
+
+
+export const removeUserFromWorkspace = async (workspaceName: string, username: string) => {
+    return APIInstance.delete(`/api/workspaces/${workspaceName}/permissions/${username}`);
 }

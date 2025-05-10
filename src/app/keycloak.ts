@@ -52,12 +52,12 @@ const updateToken = (successCallback: any) => _kc.updateToken(-1).then(successCa
 const getUsername = () => isLoggedIn() ? _kc.tokenParsed?.preferred_username ?? 'Unknown' : ''
 const getName = () => isLoggedIn() ? _kc.tokenParsed?.name ?? 'Unknown' : ''
 const getFamilyName = () => isLoggedIn() ? _kc.tokenParsed?.family_name ?? 'Unknown' : ''
-const getGivenName = () => isLoggedIn() ? _kc.tokenParsed?.given_name ?? 'Unknown' : ''
-const getAvatarLetter = () => getGivenName().length ? getGivenName().charAt(0) : '游'
+const getGivenName = () => isLoggedIn() ? _kc.tokenParsed?.preferred_username ?? 'Unknown' : ''
+const getAvatarLetter = () => getGivenName().length ? getGivenName().charAt(0).toUpperCase() : '游'
 const getEmail = () => isLoggedIn() ? _kc.tokenParsed?.email ?? 'Unknown' : ''
 
 const hasRole = (roles: any) => roles.some((role: any) => _kc.hasRealmRole(role));
-const isAdmin = () => _kc.hasResourceRole("admin", "cloud")
+const isAdmin = () => _kc.hasResourceRole("admin", envVariables.VITE_KEYCLOAK_CLIENT)
 const getExp = () => timestampToDate(_kc.tokenParsed?.exp)
 const getGroups = () => _kc.tokenParsed?.groups || []
 const UserService = {
