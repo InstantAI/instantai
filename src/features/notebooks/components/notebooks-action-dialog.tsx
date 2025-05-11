@@ -73,9 +73,10 @@ interface Props {
   currentRow?: Notebook
   open: boolean
   onOpenChange: (open: boolean) => void
+  selectedWorkspace?: string
 }
 
-export function NotebooksActionDialog({ currentRow, open, onOpenChange }: Props) {
+export function NotebooksActionDialog({ currentRow, open, onOpenChange, selectedWorkspace }: Props) {
   const isEdit = !!currentRow
   const form = useForm<NotebookForm>({
     resolver: zodResolver(formSchema),
@@ -84,7 +85,7 @@ export function NotebooksActionDialog({ currentRow, open, onOpenChange }: Props)
 
   const onSubmit = async (values: NotebookForm) => {
     try {
-      const namespace = currentRow?.metadata?.namespace || 'default'
+      const namespace = selectedWorkspace || currentRow?.metadata?.namespace || 'default'
       const resources = {
         limits: {
           cpu: values.cpu ? `${values.cpu * 1000}m` : undefined,

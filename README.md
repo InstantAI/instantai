@@ -1,67 +1,80 @@
-# Shadcn Admin Dashboard
+# InstantAI
 
-Admin Dashboard UI crafted with Shadcn and Vite. Built with responsiveness and accessibility in mind.
+[English](#english) | [中文](README-zh.md)
 
-![alt text](public/images/shadcn-admin.png)
+<a name="english"></a>
+# InstantAI - Lightweight AI Training Platform
 
-I've been creating dashboard UIs at work and for my personal projects. I always wanted to make a reusable collection of dashboard UI for future projects; and here it is now. While I've created a few custom components, some of the code is directly adapted from ShadcnUI examples.
+InstantAI is a lightweight AI training and machine learning platform based on Kubernetes, designed as an alternative to Kubeflow. It provides a streamlined solution for AI development and deployment in enterprise environments.
 
-> This is not a starter project (template) though. I'll probably make one in the future.
+![InstantAI Platform](public/images/instantai-platform.png)
 
-## Features
+> ⚠️ **Note**: This project is currently under active development. It is not recommended for production use at this stage.
 
-- Light/dark mode
-- Responsive
-- Accessible
-- With built-in Sidebar component
-- Global Search Command
-- 10+ pages
-- Extra custom components
+## Key Features
 
-## Tech Stack
+- **Lightweight Architecture**: Single-core component design with one-click installation
+- **Enterprise-Grade Security**: Complete permission control using Keycloak for authentication and authorization
+- **Space-Level Authorization**: Granular access control for individual workspaces
+- **Jupyter Notebooks**: Integrated Jupyter environment running in Kubernetes for development and debugging
+- **Streamlined UI**: Clean and intuitive user interface for efficient management
 
-**UI:** [ShadcnUI](https://ui.shadcn.com) (TailwindCSS + RadixUI)
+## Quick Start
 
-**Build Tool:** [Vite](https://vitejs.dev/)
+### Prerequisites
 
-**Routing:** [TanStack Router](https://tanstack.com/router/latest)
+The following versions are recommended (other versions may work but are not tested):
 
-**Type Checking:** [TypeScript](https://www.typescriptlang.org/)
+- Kubernetes 1.31+
+- Keycloak 25.2
+- PostgreSQL 17
 
-**Linting/Formatting:** [Eslint](https://eslint.org/) & [Prettier](https://prettier.io/)
+### Preparation
 
-**Icons:** [Tabler Icons](https://tabler.io/icons)
+1. Create a database named `instantai` and set up authorized user credentials
+2. Apply for domain names and SSL certificates (separate domains needed for frontend and backend)
 
-## Run Locally
+### Installation
 
-Clone the project
-
-```bash
-  git clone https://github.com/satnaing/shadcn-admin.git
+1. Prepare backend configuration file `values-backend.yaml`:
+```yaml
+ingress:
+  enabled: true
+config:
+  database:
+    host: localhost
+    port: 30000
+    name: instantai-api
+    username: instantai
+    password: instantai
+  keycloak:
+    baseUrl: https://keycloak.instant.ai
+    realm: master
+    client:
+      id: instantai
+      secret: c0VqkTiSUIMhSn8D4tlgKHC5UZAGZOjY
+      name: litetest
+      redirectUri: "{baseUrl}/login/oauth2/code/{registrationId}"
+      scope: openid, profile, email
+      grantType: authorization_code
 ```
 
-Go to the project directory
-
-```bash
-  cd shadcn-admin
+2. Prepare frontend configuration file `values-front.yaml`:
+```yaml
+env:
+  VITE_KEYCLOAK_URL: "https://keycloak.instant.ai"
+  VITE_KEYCLOAK_REALM: "master"
+  VITE_KEYCLOAK_CLIENT: "instantai-web"
+  VITE_BACKEND_URL: "https://lab.instant.ai"
 ```
 
-Install dependencies
-
+3. Install using Helm:
 ```bash
-  pnpm install
+# Install backend
+helm -n cloud upgrade instantai-api -f values-backend.yaml oci://ghcr.io/instantai/charts/instantai-api
+
+# Install frontend
+helm -n cloud upgrade instantai oci://ghcr.io/instantai/charts/instantai -f values-front.yaml
 ```
 
-Start the server
-
-```bash
-  pnpm run dev
-```
-
-## Author
-
-Crafted with 🤍 by [@satnaing](https://github.com/satnaing)
-
-## License
-
-Licensed under the [MIT License](https://choosealicense.com/licenses/mit/)
+4. Access the platform at: https://console.instant.ai/

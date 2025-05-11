@@ -34,7 +34,7 @@ const initKeycloak = (onAuthenticatedCallback: any) => {
 function timestampToDate(timestamp: any) {
   let date = new Date(timestamp * 1000);
   let year = date.getFullYear();
-  let month = ('0' + (date.getMonth() + 1)).slice(-2); // +1是由于月份在JavaScript中从0开始计数
+  let month = ('0' + (date.getMonth() + 1)).slice(-2);
   let day = ('0' + date.getDate()).slice(-2);
   let hour = ('0' + date.getHours()).slice(-2);
   let minute = ('0' + date.getMinutes()).slice(-2);
@@ -57,7 +57,7 @@ const getAvatarLetter = () => getGivenName().length ? getGivenName().charAt(0).t
 const getEmail = () => isLoggedIn() ? _kc.tokenParsed?.email ?? 'Unknown' : ''
 
 const hasRole = (roles: any) => roles.some((role: any) => _kc.hasRealmRole(role));
-const isAdmin = () => _kc.hasResourceRole("admin", envVariables.VITE_KEYCLOAK_CLIENT)
+const isAdmin = () => _kc.hasResourceRole("admin", envVariables.VITE_KEYCLOAK_BACKEND_CLIENT)
 const getExp = () => timestampToDate(_kc.tokenParsed?.exp)
 const getGroups = () => _kc.tokenParsed?.groups || []
 const UserService = {

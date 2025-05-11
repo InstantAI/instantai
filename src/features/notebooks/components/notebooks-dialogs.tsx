@@ -20,6 +20,7 @@ export function NotebooksDialogs({ opSuccess, selectedWorkspace }: {
             opSuccess?.()
           }, 500)
         }}
+        selectedWorkspace={selectedWorkspace}
       />
 
       <UsersInviteDialog
@@ -41,6 +42,7 @@ export function NotebooksDialogs({ opSuccess, selectedWorkspace }: {
               }, 500)
             }}
             currentRow={currentRow}
+            selectedWorkspace={selectedWorkspace}
           />
 
           <NotebooksDeleteDialog
